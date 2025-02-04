@@ -5,7 +5,72 @@ const initialState: IProduct[] = [
   {
     id: "1",
     title: "Fire warriors",
-    description: "base Tau Empire infantry",
+    avatar:
+      "https://avatars.mds.yandex.net/get-marketpic/1578323/market_q9QLG7LmszbpccsfhuKvKQ/orig",
+    description: "Base Tau Empire infantry",
+    price: 2000,
+    remained: 5,
+  },
+  {
+    id: "2",
+    title: "Fire warriors",
+    avatar:
+      "https://i.pinimg.com/originals/7f/7f/ae/7f7fae1b6bb95e6f183d55e6ced7bd4b.jpg",
+    description: "Base Tau Empire infantry",
+    price: 2000,
+    remained: 5,
+  },
+  {
+    id: "3",
+    title: "Fire warriors",
+    avatar:
+      "https://avatars.mds.yandex.net/get-marketpic/1578323/market_q9QLG7LmszbpccsfhuKvKQ/orig",
+    description: "Base Tau Empire infantry",
+    price: 2000,
+    remained: 5,
+  },
+  {
+    id: "4",
+    title: "Fire warriors",
+    avatar:
+      "https://avatars.mds.yandex.net/get-marketpic/1578323/market_q9QLG7LmszbpccsfhuKvKQ/orig",
+    description: "Base Tau Empire infantry",
+    price: 2000,
+    remained: 5,
+  },
+  {
+    id: "5",
+    title: "Fire warriors",
+    avatar:
+      "https://avatars.mds.yandex.net/get-marketpic/1578323/market_q9QLG7LmszbpccsfhuKvKQ/orig",
+    description: "Base Tau Empire infantry",
+    price: 2000,
+    remained: 5,
+  },
+  {
+    id: "6",
+    title: "Fire warriors",
+    avatar:
+      "https://i.pinimg.com/originals/7f/7f/ae/7f7fae1b6bb95e6f183d55e6ced7bd4b.jpg",
+    description: "Base Tau Empire infantry",
+    price: 2000,
+    remained: 5,
+  },
+  {
+    id: "7",
+    title: "Fire warriors",
+    avatar:
+      "https://avatars.mds.yandex.net/get-marketpic/1578323/market_q9QLG7LmszbpccsfhuKvKQ/orig",
+    description: "Base Tau Empire infantry",
+    price: 2000,
+    remained: 5,
+  },
+  {
+    id: "8",
+    title: "Fire warriors",
+    avatar:
+      "https://avatars.mds.yandex.net/get-marketpic/1578323/market_q9QLG7LmszbpccsfhuKvKQ/orig",
+    description: "Base Tau Empire infantry",
     price: 2000,
     remained: 5,
   },
