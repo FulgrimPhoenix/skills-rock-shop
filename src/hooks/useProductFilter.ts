@@ -31,7 +31,7 @@ export const useProductFilter = (initialState: IProduct[]) => {
           )
         );
       }
-    }, 50);
+    }, 10);
 
     return () => clearTimeout(delayId);
   }, [searchParams, generalListOfProducts]);

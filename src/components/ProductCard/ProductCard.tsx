@@ -7,9 +7,12 @@ import {
   CardMedia,
   IconButton,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { IProduct } from "src/types/product.type";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useAppDispatch } from "src/app/store";
+import { deleteProduct } from "src/features/products/productsSlice";
 
 export const ProductCard = ({
   id,
@@ -19,6 +22,13 @@ export const ProductCard = ({
   price,
   remained,
 }: IProduct) => {
+  const currentTheme = useTheme();
+  const dispatch = useAppDispatch();
+
+  function deleteThisProduct(id: string) {
+    dispatch(deleteProduct(id));
+  }
+
   return (
     <Card key={id} sx={{ height: "100%", width: 200, m: "0 auto" }}>
       <CardMedia sx={{ height: 140 }} image={avatar} title={title} />
@@ -48,10 +58,17 @@ export const ProductCard = ({
         </Box>
       </CardContent>
       <CardActions sx={{ display: "flex", justifyContent: "space-between" }}>
-        <IconButton color="secondary">
+        <IconButton
+          color="secondary"
+          onClick={() => deleteThisProduct(id || "")}
+        >
           <DeleteIcon />
         </IconButton>
-        <Button size="small" variant="contained">
+        <Button
+          size="small"
+          variant="contained"
+          sx={{ color: currentTheme.palette.text.primary }}
+        >
           Add to cart
         </Button>
       </CardActions>

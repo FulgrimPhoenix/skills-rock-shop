@@ -18,8 +18,8 @@ import { ProductCard } from "../ProductCard/ProductCard";
 import { ProductGrid, ProductListRoot } from "./ProductList.styles";
 import { ChangeEvent, SyntheticEvent, useEffect } from "react";
 import { PRODUCT_ON_PAGE_NUMBER } from "./ProductList.const";
-import { usePagination } from "src/features/pagination/usePagination";
-import { useProductFilter } from "src/features/productFilter/useProductFilter";
+import { usePagination } from "src/hooks/usePagination";
+import { useProductFilter } from "src/hooks/useProductFilter";
 
 export const ProductList = () => {
   const currentTheme = useTheme();
@@ -190,7 +190,11 @@ export const ProductList = () => {
 
       <ProductGrid container spacing={3}>
         {displayedProducts.map((el) => (
-          <Grid2 size={{ xs: 12, sm: 4, md: 2.4 }} sx={{ display: "flex" }}>
+          <Grid2
+            key={el.id}
+            size={{ xs: 12, sm: 4, md: 2.4 }}
+            sx={{ display: "flex" }}
+          >
             <ProductCard
               id={el.id}
               title={el.title}
