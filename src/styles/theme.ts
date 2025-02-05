@@ -1,6 +1,18 @@
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
+  components: {
+    MuiInput: {
+      styleOverrides: {
+        root: {
+          "&::before": {
+            borderBottomColor: "rgba(255, 255, 255, 0.7)",
+          },
+        },
+      },
+    },
+  },
+  breakpoints: {},
   palette: {
     primary: {
       main: "#9F0040",
