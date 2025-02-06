@@ -40,7 +40,7 @@ export const AddProductPopup = () => {
 
   return (
     <Dialog open={isAddProductPopupOpen} onClose={handleClose}>
-      <DialogTitle>Add new product</DialogTitle>
+      <DialogTitle variant="h4">Add new product</DialogTitle>
       <DialogContent>
         <form style={{ marginBottom: "20px" }} onSubmit={addNewProduct}>
           {INPUTS_LIST.map((el) => (

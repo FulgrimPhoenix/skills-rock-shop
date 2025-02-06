@@ -13,6 +13,7 @@ import { IProduct } from "src/types/product.type";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useAppDispatch } from "src/app/store";
 import { deleteProduct } from "src/features/products/productsSlice";
+import { addProductToCart } from "src/features/cart/cartSlice";
 
 export const ProductCard = ({
   id,
@@ -25,9 +26,22 @@ export const ProductCard = ({
   const currentTheme = useTheme();
   const dispatch = useAppDispatch();
 
-  function deleteThisProduct(id: string) {
+  const deleteThisProduct = (id: string) => {
     dispatch(deleteProduct(id));
-  }
+  };
+
+  const addCurrentProductToCart = () => {
+    dispatch(
+      addProductToCart({
+        id,
+        title,
+        avatar,
+        description,
+        price,
+        remained,
+      })
+    );
+  };
 
   return (
     <Card key={id} sx={{ height: "100%", width: 200, m: "0 auto" }}>
@@ -69,6 +83,7 @@ export const ProductCard = ({
           variant="contained"
           sx={{ color: currentTheme.palette.text.primary }}
           disabled={remained ? false : true}
+          onClick={addCurrentProductToCart}
         >
           Add to cart
         </Button>

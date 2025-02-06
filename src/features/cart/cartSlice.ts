@@ -15,7 +15,7 @@ export const cartSlice = createSlice({
       let targetProductIndex = state.findIndex(
         (el) => el.id === action.payload.id
       );
-      if (targetProductIndex !== -1) {
+      if (targetProductIndex === -1) {
         const newProductInCart = { ...action.payload, quantity: 0 };
         state.push(newProductInCart);
       } else {
@@ -27,7 +27,6 @@ export const cartSlice = createSlice({
       let targetProductIndex = state.findIndex(
         (el) => el.id === action.payload
       );
-      state[targetProductIndex].quantity -= 1;
       if (state[targetProductIndex].quantity - 1 === 0) {
         return state.filter((el) => el.id !== action.payload);
       } else {
