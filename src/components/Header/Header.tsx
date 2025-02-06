@@ -14,9 +14,13 @@ import { togglePopup } from "src/features/popups/popupSlice";
 export const Header = () => {
   const dispatch = useAppDispatch();
 
-  function openAddProductPopupOpen() {
+  const openAddProductPopup = () => {
     dispatch(togglePopup("isAddProductPopupOpen"));
-  }
+  };
+
+  const openCartPopup = () => {
+    dispatch(togglePopup("isCartPopupOpen"));
+  };
   return (
     <AppBar position="relative">
       <Toolbar>
@@ -24,10 +28,10 @@ export const Header = () => {
           Miniatures Shop
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
-        <AddProductButton size="small" onClick={openAddProductPopupOpen}>
+        <AddProductButton size="small" onClick={openAddProductPopup}>
           Add product
         </AddProductButton>
-        <IconButton>
+        <IconButton onClick={openCartPopup}>
           <Badge badgeContent={4} color="error">
             <ShoppingCartOutlinedIcon />
           </Badge>

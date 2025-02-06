@@ -63,19 +63,19 @@ export const ProductList = () => {
     }
   };
 
-  function handleChangeIsAvailable(e: SyntheticEvent, checked: boolean) {
+  const handleChangeIsAvailable = (e: SyntheticEvent, checked: boolean) => {
     const target = e.target as HTMLInputElement;
 
     setSearchParams({ ...searchParams, [target.name]: checked });
-  }
+  };
 
-  function handleChangeSearchParams(e: ChangeEvent<HTMLInputElement>) {
+  const handleChangeSearchParams = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchParams({ ...searchParams, [e.target.name]: e.target.value });
-  }
+  };
 
-  function handleChangeProductDisplayedOnPage(e: SelectChangeEvent) {
+  const handleChangeProductDisplayedOnPage = (e: SelectChangeEvent) => {
     setProductsOnPage(Number(e.target.value));
-  }
+  };
 
   useEffect(() => {
     setFilteredProductList(filteredProductList);
@@ -133,13 +133,11 @@ export const ProductList = () => {
         </Grid2>
         <Grid2 size={{ xs: 11, sm: 4 }}>
           <Slider
-            getAriaLabel={() => "Temperature range"}
+            getAriaLabel={() => "Price range"}
             min={0}
             max={maxPrice}
             value={[searchParams.priceRange.min, searchParams.priceRange.max]}
-            onChange={(e, newPriceRange) =>
-              handleChangePriceRange(e, newPriceRange)
-            }
+            onChange={handleChangePriceRange}
             valueLabelDisplay="auto"
             getAriaValueText={(value: number) => `${value} rubs`}
             marks={[

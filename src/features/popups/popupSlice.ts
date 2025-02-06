@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface IinitialState {
   isAddProductPopupOpen: boolean;
   isEditProductPopupOpen: boolean;
+  isCartPopupOpen: boolean;
 }
 
 const initialState: IinitialState = {
   isAddProductPopupOpen: false,
   isEditProductPopupOpen: false,
+  isCartPopupOpen: false,
 };
 
 export const popupsSlice = createSlice({

@@ -68,6 +68,7 @@ export const ProductCard = ({
           size="small"
           variant="contained"
           sx={{ color: currentTheme.palette.text.primary }}
+          disabled={remained ? false : true}
         >
           Add to cart
         </Button>

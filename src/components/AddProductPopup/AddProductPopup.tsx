@@ -62,7 +62,7 @@ export const AddProductPopup = () => {
         <Button
           onClick={handleClose}
           sx={{ color: currentTheme.palette.text.primary }}
-          variant="contained"
+          variant="text"
         >
           Close
         </Button>

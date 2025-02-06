@@ -24,6 +24,8 @@ const theme = createTheme({
     },
     action: {
       active: "#fff",
+      disabled: "rgba(255, 255, 255, 0.7)",
+      disabledBackground: "rgba(255, 255, 255, 0.1)",
     },
     text: {
       primary: "#fff",
