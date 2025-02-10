@@ -1,4 +1,5 @@
 import {
+  Button,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -77,6 +78,14 @@ export const ProductList = () => {
     setProductsOnPage(Number(e.target.value));
   };
 
+  const resetAllFilters = () => {
+    setSearchParams({
+      title: "",
+      priceRange: { min: 0, max: maxPrice },
+      isRemained: true,
+    });
+  };
+
   useEffect(() => {
     setFilteredProductList(filteredProductList);
   }, [productList, filteredProductList, setFilteredProductList]);
@@ -102,7 +111,10 @@ export const ProductList = () => {
           p: "0 24px",
         }}
       >
-        <Grid2 size={{ xs: 12, sm: 4 }}>
+        <Grid2
+          size={{ xs: 12, sm: 4 }}
+          sx={{ display: "flex", flexDirection: "column" }}
+        >
           <FormControl sx={{ maxWidth: 100 }} size="small">
             <InputLabel
               id="demo-select-small-label"
@@ -122,14 +134,24 @@ export const ProductList = () => {
               ))}
             </Select>
           </FormControl>
+
           <FormGroup>
             <FormControlLabel
               name="isRemained"
-              control={<Checkbox defaultChecked />}
+              control={
+                <Checkbox checked={searchParams.isRemained ? true : false} />
+              }
               label="Is available"
               onChange={handleChangeIsAvailable}
             />
           </FormGroup>
+          <Button
+            variant="outlined"
+            sx={{ maxWidth: 140 }}
+            onClick={resetAllFilters}
+          >
+            Reset filters
+          </Button>
         </Grid2>
         <Grid2 size={{ xs: 11, sm: 4 }}>
           <Slider
