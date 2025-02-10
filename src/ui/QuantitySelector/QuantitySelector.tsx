@@ -29,7 +29,7 @@ export const QuantitySelector: FC<IQuantitySelector> = ({
       <Typography
         variant="h6"
         component="span"
-        sx={{ m: "0 18px", fontSize: "16px" }}
+        sx={{ m: "0 14px", fontSize: "16px" }}
       >
         {product.quantity}
       </Typography>

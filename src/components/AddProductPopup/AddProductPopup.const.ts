@@ -31,7 +31,7 @@ export const INPUTS_LIST: Iinput[] = [
     required: true,
   },
   {
-    label: "Product image",
+    label: "Product image url",
     name: "avatar",
     type: "text",
     required: false,

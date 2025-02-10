@@ -11,23 +11,56 @@ import {
 } from "@mui/material";
 import { IProduct } from "src/types/product.type";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useAppDispatch } from "src/app/store";
-import { deleteProduct } from "src/features/products/productsSlice";
-import { addProductToCart } from "src/features/cart/cartSlice";
 
-export const ProductCard = ({
+import { useAppDispatch, useAppSelector } from "src/app/store";
+import { deleteProduct } from "src/features/products/productsSlice";
+import {
+  addProductToCart,
+  deleteProductFromCart,
+} from "src/features/cart/cartSlice";
+import { QuantitySelector } from "src/ui/QuantitySelector/QuantitySelector";
+import { EditProductButton, EditProductIcon } from "./ProductCard.styles";
+import { setFocusedProduct, togglePopup } from "src/features/popups/popupSlice";
+import { FC } from "react";
+
+export const ProductCard: FC<IProduct> = ({
   id,
   title,
   avatar,
   description,
   price,
   remained,
-}: IProduct) => {
+}) => {
   const currentTheme = useTheme();
   const dispatch = useAppDispatch();
+  const cart_list = useAppSelector((state) => state.cart_list);
+  const quantity = cart_list.find((el) => el.id === id)?.quantity;
 
   const deleteThisProduct = (id: string) => {
     dispatch(deleteProduct(id));
+  };
+
+  const addProductSample = (product: IProduct & { quantity: number }) => {
+    dispatch(addProductToCart(product));
+  };
+
+  const deleteProductSample = (id: string) => {
+    dispatch(deleteProductFromCart(id));
+  };
+
+  const openEditPopup = () => {
+    console.log("lol");
+    dispatch(
+      setFocusedProduct({
+        id,
+        title,
+        avatar,
+        description,
+        price,
+        remained,
+      })
+    );
+    dispatch(togglePopup("isEditProductPopupOpen"));
   };
 
   const addCurrentProductToCart = () => {
@@ -44,8 +77,11 @@ export const ProductCard = ({
   };
 
   return (
-    <Card key={id} sx={{ height: "100%", width: 200, m: "0 auto" }}>
+    <Card key={id} sx={{ height: "100%", m: "0 auto", position: "relative" }}>
       <CardMedia sx={{ height: 140 }} image={avatar} title={title} />
+      <EditProductButton onClick={openEditPopup}>
+        <EditProductIcon />
+      </EditProductButton>
       <CardContent
         sx={{
           pb: "0",
@@ -78,15 +114,31 @@ export const ProductCard = ({
         >
           <DeleteIcon />
         </IconButton>
-        <Button
-          size="small"
-          variant="contained"
-          sx={{ color: currentTheme.palette.text.primary }}
-          disabled={remained ? false : true}
-          onClick={addCurrentProductToCart}
-        >
-          Add to cart
-        </Button>
+        {quantity ? (
+          <QuantitySelector
+            product={{
+              id,
+              title,
+              avatar,
+              description,
+              price,
+              remained,
+              quantity,
+            }}
+            addProductSample={addProductSample}
+            deleteProductSample={deleteProductSample}
+          />
+        ) : (
+          <Button
+            size="small"
+            variant="contained"
+            sx={{ color: currentTheme.palette.text.primary }}
+            disabled={remained ? false : true}
+            onClick={addCurrentProductToCart}
+          >
+            Add to cart
+          </Button>
+        )}
       </CardActions>
     </Card>
   );

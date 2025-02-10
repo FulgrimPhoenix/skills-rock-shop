@@ -1,6 +1,5 @@
 import {
   Button,
-  Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
@@ -28,7 +27,6 @@ export const CartPopup = () => {
   const cart_list = useAppSelector((state) => state.cart_list);
   const dispatch = useAppDispatch();
   const currentTheme = useTheme();
-  // const [totalPrice, setTotalPrice] = useState(0);
 
   const totalPrice = useMemo(
     () => cart_list.reduce((acc, el) => (acc += el.price * el.quantity), 0),
