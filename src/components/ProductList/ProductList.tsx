@@ -118,7 +118,7 @@ export const ProductList = () => {
               onChange={handleChangeProductDisplayedOnPage}
             >
               {PRODUCT_ON_PAGE_NUMBER.map((el) => (
-                <MenuItem value={el}>{`by ${el}`}</MenuItem>
+                <MenuItem key={el} value={el}>{`by ${el}`}</MenuItem>
               ))}
             </Select>
           </FormControl>

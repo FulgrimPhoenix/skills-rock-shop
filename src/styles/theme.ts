@@ -12,7 +12,7 @@ const theme = createTheme({
       },
     },
   },
-  breakpoints: {},
+
   palette: {
     primary: {
       main: "#9F0040",
@@ -37,6 +37,15 @@ const theme = createTheme({
     },
     error: {
       main: "#AC2FFF",
+    },
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 960,
+      lg: 1200,
+      xl: 1920,
     },
   },
 });

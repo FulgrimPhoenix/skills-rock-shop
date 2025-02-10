@@ -1,35 +1,39 @@
 import {
-  Avatar,
-  Box,
   Button,
-  ButtonGroup,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "src/app/store";
 import { togglePopup } from "src/features/popups/popupSlice";
 import {
   CartList,
-  CartListItem,
-  QuantityChangeButton,
+  RootCartPopup,
+  TotalPriceContainer,
 } from "./CartPopup.styles";
 import {
   addProductToCart,
   deleteProductFromCart,
 } from "src/features/cart/cartSlice";
 import { IProduct } from "src/types/product.type";
+import { CartListItem } from "src/ui/CartListItem/CartListItem";
+import { useMemo } from "react";
+import { QuantitySelector } from "src/ui/QuantitySelector/QuantitySelector";
 
 export const CartPopup = () => {
-  const { popup_manager, cart_list } = useAppSelector((state) => state);
+  const popup_manager = useAppSelector((state) => state.popup_manager);
+  const cart_list = useAppSelector((state) => state.cart_list);
   const dispatch = useAppDispatch();
+  const currentTheme = useTheme();
+  // const [totalPrice, setTotalPrice] = useState(0);
+
+  const totalPrice = useMemo(
+    () => cart_list.reduce((acc, el) => (acc += el.price * el.quantity), 0),
+    [cart_list]
+  );
 
   const handleClose = () => {
     dispatch(togglePopup("isCartPopupOpen"));
@@ -44,63 +48,54 @@ export const CartPopup = () => {
   };
 
   return (
-    <Dialog open={popup_manager.isCartPopupOpen} onClose={handleClose}>
+    <RootCartPopup open={popup_manager.isCartPopupOpen} onClose={handleClose}>
       <DialogTitle variant="h4">Cart</DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ p: 0 }}>
         {cart_list.length === 0 ? (
-          <Typography component="h6" variant="h5" sx={{ textAlign: "center" }}>
+          <Typography
+            component="h6"
+            variant="h5"
+            sx={{ textAlign: "center", m: "0 auto 24px" }}
+          >
             {"No products in cart  :("}
           </Typography>
         ) : (
-          <CartList>
-            {cart_list.map((product) => (
-              <CartListItem>
-                <Box display="flex" flexDirection="row">
-                  <ListItemAvatar>
-                    <Avatar src={product.avatar} />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={product.title}
-                    secondary={product.description}
-                  />
-                </Box>
-                <ButtonGroup
-                  variant="text"
-                  size="small"
-                  sx={{ margin: "0 15px" }}
-                >
-                  <QuantityChangeButton
-                    size="small"
-                    onClick={() => deleteProductSample(product.id || "")}
-                  >
-                    -
-                  </QuantityChangeButton>
-                  <Typography
-                    variant="h6"
-                    component="span"
-                    sx={{ m: "0 18px" }}
-                  >
-                    {product.quantity}
-                  </Typography>
-                  <QuantityChangeButton
-                    onClick={() => addProductSample(product)}
-                  >
-                    +
-                  </QuantityChangeButton>
-                </ButtonGroup>
-                <Typography component="span" variant="h6">
-                  {product.price}₽
-                </Typography>
-              </CartListItem>
-            ))}
-          </CartList>
+          <>
+            <CartList>
+              {cart_list.map((product) => (
+                <CartListItem
+                  key={product.id}
+                  product={product}
+                  quantitySelector={
+                    <QuantitySelector
+                      product={product}
+                      addProductSample={addProductSample}
+                      deleteProductSample={deleteProductSample}
+                    />
+                  }
+                />
+              ))}
+            </CartList>
+            <TotalPriceContainer>
+              <Typography component="span" variant="h5">
+                Total
+              </Typography>
+              <Typography component="span" variant="h4">
+                {totalPrice} ₽
+              </Typography>
+            </TotalPriceContainer>
+          </>
         )}
       </DialogContent>
       <DialogActions>
-        <Button type="submit" variant="contained">
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{ color: currentTheme.palette.text.primary }}
+        >
           Pay
         </Button>
       </DialogActions>
-    </Dialog>
+    </RootCartPopup>
   );
 };

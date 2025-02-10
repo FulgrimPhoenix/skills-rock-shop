@@ -45,6 +45,7 @@ export const AddProductPopup = () => {
         <form style={{ marginBottom: "20px" }} onSubmit={addNewProduct}>
           {INPUTS_LIST.map((el) => (
             <TextField
+              key={el.name}
               label={el.label}
               name={el.name}
               type={el.type}

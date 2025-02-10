@@ -1,17 +1,17 @@
-import { Button, List, ListItem, styled } from "@mui/material";
+import { Box, Dialog, List, styled } from "@mui/material";
 
 export const CartList = styled(List)(({ theme }) => ({
   width: "100%",
   backgroundColor: theme.palette.background.paper,
 }));
 
-export const CartListItem = styled(ListItem)({
+export const TotalPriceContainer = styled(Box)({
   display: "flex",
   justifyContent: "space-between",
-  marginBottom: "16px",
+  flexDirection: "row",
+  padding: "8px 16px",
 });
 
-export const QuantityChangeButton = styled(Button)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.main,
-  color: theme.palette.text.primary,
-}));
+export const RootCartPopup = styled(Dialog)({
+  "& .MuiDialog-paper": { width: "100%", maxWidth: "800px" },
+});

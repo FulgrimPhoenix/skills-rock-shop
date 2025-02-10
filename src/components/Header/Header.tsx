@@ -8,10 +8,11 @@ import {
 } from "@mui/material";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { AddProductButton } from "./Header.styles";
-import { useAppDispatch } from "src/app/store";
+import { useAppDispatch, useAppSelector } from "src/app/store";
 import { togglePopup } from "src/features/popups/popupSlice";
 
 export const Header = () => {
+  const cart_list = useAppSelector((state) => state.cart_list);
   const dispatch = useAppDispatch();
 
   const openAddProductPopup = () => {
@@ -32,7 +33,7 @@ export const Header = () => {
           Add product
         </AddProductButton>
         <IconButton onClick={openCartPopup}>
-          <Badge badgeContent={4} color="error">
+          <Badge badgeContent={cart_list.length} color="error">
             <ShoppingCartOutlinedIcon />
           </Badge>
         </IconButton>
