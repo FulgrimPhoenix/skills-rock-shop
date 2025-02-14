@@ -3,6 +3,6 @@ export interface IProduct {
   title: string;
   avatar: string;
   description: string;
-  price: number;
-  remained: number;
+  price: number | "";
+  remained: number | "";
 }

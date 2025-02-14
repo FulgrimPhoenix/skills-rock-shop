@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { useAppSelector } from "src/app/store";
 import { ProductCard } from "../ProductCard/ProductCard";
-import { ProductGrid, ProductListRoot } from "./ProductList.styles";
+import { FilterGrid, ProductGrid, ProductListRoot } from "./ProductList.styles";
 import { ChangeEvent, SyntheticEvent, useEffect } from "react";
 import { PRODUCT_ON_PAGE_NUMBER } from "./ProductList.const";
 import { usePagination } from "src/hooks/usePagination";
@@ -26,7 +26,8 @@ export const ProductList = () => {
   const currentTheme = useTheme();
   const productList = useAppSelector((state) => state.product_list);
   const maxPrice = productList.reduce(
-    (acc, el) => (el.price >= acc ? el.price : acc),
+    (acc, el) =>
+      typeof el.price === "number" && el.price >= acc ? el.price : acc,
     0
   );
   const { filteredProductList, searchParams, setSearchParams } =
@@ -103,14 +104,7 @@ export const ProductList = () => {
           m: "0 0 20px",
         }}
       />
-      <Grid2
-        container
-        sx={{
-          alignItems: "center",
-          justifyContent: "space-between",
-          p: "0 24px",
-        }}
-      >
+      <FilterGrid container>
         <Grid2
           size={{ xs: 12, sm: 4 }}
           sx={{ display: "flex", flexDirection: "column" }}
@@ -206,7 +200,7 @@ export const ProductList = () => {
             </Grid2>
           </Grid2>
         </Grid2>
-      </Grid2>
+      </FilterGrid>
 
       <ProductGrid container spacing={3}>
         {displayedProducts.map((el) => (

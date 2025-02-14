@@ -16,11 +16,13 @@ export const Header = () => {
   const dispatch = useAppDispatch();
 
   const openAddProductPopup = () => {
-    dispatch(togglePopup("isAddProductPopupOpen"));
+    dispatch(
+      togglePopup({ variant: "isProductPopupOpen", title: "Add new product" })
+    );
   };
 
   const openCartPopup = () => {
-    dispatch(togglePopup("isCartPopupOpen"));
+    dispatch(togglePopup({ variant: "isCartPopupOpen" }));
   };
   return (
     <AppBar position="relative">

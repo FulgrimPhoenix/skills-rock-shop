@@ -35,9 +35,9 @@ const theme = createTheme({
       default: "#000",
       paper: "#232323",
     },
-    error: {
-      main: "#AC2FFF",
-    },
+    // error: {
+    //   // main: "#AC2FFF",
+    // },
   },
   breakpoints: {
     values: {

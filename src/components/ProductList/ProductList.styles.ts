@@ -8,12 +8,18 @@ export const ProductListRoot = styled("main")({
   padding: "24px",
 });
 
-export const ProductGrid = styled(Grid2)({
+export const ProductGrid = styled(Grid2)(({ theme }) => ({
   minWidth: "100%",
   margin: "10px auto",
   justifyContent: "center",
-  "@media (min-width:600px)": {
+  [theme.breakpoints.up("sm")]: {
     justifyContent: "flex-start",
     padding: "24px 0 ",
   },
+}));
+
+export const FilterGrid = styled(Grid2)({
+  alignItems: "center",
+  justifyContent: "space-between",
+  p: "0 24px",
 });

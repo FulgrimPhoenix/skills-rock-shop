@@ -2,16 +2,20 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IProduct } from "src/types/product.type";
 
 interface IinitialState {
-  isAddProductPopupOpen: boolean;
-  isEditProductPopupOpen: boolean;
-  isCartPopupOpen: boolean;
+  currentPopup: "Edit the product" | "Add new product" | "Cart" | null;
+  isPopupOpen: {
+    isProductPopupOpen: boolean;
+    isCartPopupOpen: boolean;
+  };
   focusedProduct: IProduct;
 }
 
 const initialState: IinitialState = {
-  isAddProductPopupOpen: false,
-  isEditProductPopupOpen: false,
-  isCartPopupOpen: false,
+  currentPopup: null,
+  isPopupOpen: {
+    isProductPopupOpen: false,
+    isCartPopupOpen: false,
+  },
   focusedProduct: {
     id: "",
     title: "",
@@ -28,9 +32,16 @@ export const popupsSlice = createSlice({
   reducers: {
     togglePopup: (
       state,
-      action: PayloadAction<keyof Omit<IinitialState, "focusedProduct">>
+      action: PayloadAction<{
+        variant: keyof IinitialState["isPopupOpen"];
+        title?: IinitialState["currentPopup"];
+      }>
     ) => {
-      state[action.payload] = !state[action.payload];
+      state.isPopupOpen[action.payload.variant] =
+        !state.isPopupOpen[action.payload.variant];
+      if (action.payload.title) {
+        state.currentPopup = action.payload.title;
+      }
     },
     setFocusedProduct: (state, action: PayloadAction<IProduct>) => {
       state.focusedProduct = action.payload;

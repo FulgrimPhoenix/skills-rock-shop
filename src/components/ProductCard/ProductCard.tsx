@@ -1,9 +1,7 @@
 import {
   Box,
   Button,
-  Card,
   CardActions,
-  CardContent,
   CardMedia,
   IconButton,
   Typography,
@@ -19,7 +17,12 @@ import {
   deleteProductFromCart,
 } from "src/features/cart/cartSlice";
 import { QuantitySelector } from "src/ui/QuantitySelector/QuantitySelector";
-import { EditProductButton, EditProductIcon } from "./ProductCard.styles";
+import {
+  CardContentContainer,
+  CardRoot,
+  EditProductButton,
+  EditProductIcon,
+} from "./ProductCard.styles";
 import { setFocusedProduct, togglePopup } from "src/features/popups/popupSlice";
 import { FC } from "react";
 
@@ -60,7 +63,9 @@ export const ProductCard: FC<IProduct> = ({
         remained,
       })
     );
-    dispatch(togglePopup("isEditProductPopupOpen"));
+    dispatch(
+      togglePopup({ variant: "isProductPopupOpen", title: "Edit the product" })
+    );
   };
 
   const addCurrentProductToCart = () => {
@@ -77,19 +82,12 @@ export const ProductCard: FC<IProduct> = ({
   };
 
   return (
-    <Card key={id} sx={{ height: "100%", m: "0 auto", position: "relative" }}>
+    <CardRoot key={id}>
       <CardMedia sx={{ height: 140 }} image={avatar} title={title} />
       <EditProductButton onClick={openEditPopup}>
         <EditProductIcon />
       </EditProductButton>
-      <CardContent
-        sx={{
-          pb: "0",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
+      <CardContentContainer>
         <Box>
           <Typography variant="h5" component="h6" overflow="clip" noWrap>
             {title}
@@ -106,7 +104,7 @@ export const ProductCard: FC<IProduct> = ({
             sx={{ textAlign: "right" }}
           >{`Remained: ${remained}`}</Typography>
         </Box>
-      </CardContent>
+      </CardContentContainer>
       <CardActions sx={{ display: "flex", justifyContent: "space-between" }}>
         <IconButton
           color="secondary"
@@ -140,6 +138,6 @@ export const ProductCard: FC<IProduct> = ({
           </Button>
         )}
       </CardActions>
-    </Card>
+    </CardRoot>
   );
 };
