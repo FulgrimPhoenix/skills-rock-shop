@@ -21,45 +21,51 @@ import { ChangeEvent, SyntheticEvent } from "react";
 import { PRODUCT_ON_PAGE_NUMBER } from "./ProductList.const";
 // import { useProductFilter } from "src/hooks/useProductFilter";
 
-import { getProductListState } from "src/features/products/productsSelectors";
+import {
+  getFilteredProductListState,
+  getMaxPrice,
+  getProductListState,
+} from "src/features/products/productsSelectors";
 import { setPage, setProductOnPage } from "src/features/products/productsSlice";
 import { IProduct } from "src/types/product.type";
 
 export const ProductList = () => {
   const currentTheme = useTheme();
-  const { paginationParams, productList, filteredProductList, searchParams } =
+  const { paginationParams, productList, searchParams } =
     useAppSelector(getProductListState);
+  const filteredProductList = useAppSelector(getFilteredProductListState);
+  const maxPrice = useAppSelector(getMaxPrice);
   const dispatch = useAppDispatch();
-  const maxPrice = 10000;
 
   // в силу того, что мы тут не используе event - я выключил проверку типа
   const handleChangePriceRange = (e: any, newPriceRange: number | number[]) => {
-    // if (Array.isArray(newPriceRange) && newPriceRange.length === 2) {
-    //   setSearchParams({
-    //     ...searchParams,
-    //     priceRange: {
-    //       min: newPriceRange[0],
-    //       max: newPriceRange[1],
-    //     },
-    //   });
-    // } else if (typeof newPriceRange === "number") {
-    //   setSearchParams({
-    //     ...searchParams,
-    //     priceRange: {
-    //       min: newPriceRange,
-    //       max: newPriceRange,
-    //     },
-    //   });
-    // }
+    if (Array.isArray(newPriceRange) && newPriceRange.length === 2) {
+      dispatch(
+        setProductOnPage({
+          priceRange: {
+            min: newPriceRange[0],
+            max: newPriceRange[1],
+          },
+        })
+      );
+    } else if (typeof newPriceRange === "number") {
+      dispatch(
+        setProductOnPage({
+          priceRange: {
+            min: newPriceRange,
+            max: newPriceRange,
+          },
+        })
+      );
+    }
   };
 
   const handleChangeIsAvailable = (e: SyntheticEvent, checked: boolean) => {
-    // const target = e.target as HTMLInputElement;
-    // setSearchParams({ ...searchParams, [target.name]: checked });
+    dispatch(setProductOnPage({ isRemained: checked }));
   };
 
   const handleChangeSearchParams = (e: ChangeEvent<HTMLInputElement>) => {
-    // setSearchParams({ ...searchParams, [e.target.name]: e.target.value });
+    dispatch(setProductOnPage({ title: e.target.value }));
   };
 
   const handleChangeProductDisplayedOnPage = (e: SelectChangeEvent) => {
@@ -67,11 +73,13 @@ export const ProductList = () => {
   };
 
   const resetAllFilters = () => {
-    // setSearchParams({
-    //   title: "",
-    //   priceRange: { min: 0, max: maxPrice },
-    //   isRemained: true,
-    // });
+    dispatch(
+      setProductOnPage({
+        title: "",
+        priceRange: { min: 0, max: maxPrice },
+        isRemained: true,
+      })
+    );
   };
 
   const setCurrentPage = (e: ChangeEvent<unknown>, pageNumber: number) => {

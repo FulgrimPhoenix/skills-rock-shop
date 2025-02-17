@@ -41,8 +41,8 @@ export const ProductCard: FC<IProduct> = ({
   const quantity = cart_list.find((el: IProduct) => el.id === id)?.quantity;
   const { open } = useModalContext();
 
-  const deleteThisProduct = (id: string) => {
-    dispatch(deleteProduct(id));
+  const deleteThisProduct = () => {
+    dispatch(deleteProduct(id || ""));
   };
 
   const addProductSample = (product: IProduct & { quantity: number }) => {
@@ -101,10 +101,7 @@ export const ProductCard: FC<IProduct> = ({
         </Box>
       </CardContentContainer>
       <CardActions sx={{ display: "flex", justifyContent: "space-between" }}>
-        <IconButton
-          color="secondary"
-          onClick={() => deleteThisProduct(id || "")}
-        >
+        <IconButton color="secondary" onClick={deleteThisProduct}>
           <DeleteIcon />
         </IconButton>
         {quantity ? (

@@ -24,10 +24,17 @@ const initialState: IProductList = {
   searchParams: {
     title: "",
     isRemained: true,
-    priceRange: { min: 0, max: 1000 },
+    priceRange: {
+      min: 0,
+      max: PRODUCTS_LIST.reduce(
+        (acc: number, el: IProduct) =>
+          Number(el.price) > acc ? (acc = Number(el.price)) : acc,
+        0
+      ),
+    },
   },
   productList: PRODUCTS_LIST,
-  filteredProductList: PRODUCTS_LIST,
+  filteredProductList: PRODUCTS_LIST.filter((el) => Boolean(el.remained)),
 };
 
 export const productsSlice = createSlice({
@@ -53,7 +60,9 @@ export const productsSlice = createSlice({
       state.productList = state.productList.filter(
         (el) => el.id !== action.payload
       );
-      state.filteredProductList = state.productList;
+      state.filteredProductList = state.filteredProductList.filter(
+        (el) => el.id !== action.payload
+      );
     },
     setPage: (state, action: PayloadAction<number>) => {
       state.paginationParams.page = action.payload;
@@ -66,30 +75,36 @@ export const productsSlice = createSlice({
         rangeStart + state.paginationParams.productsOnPage
       );
     },
-    setProductOnPage: (state, action: PayloadAction<number>) => {
-      state.paginationParams.productsOnPage = action.payload;
+    setProductOnPage: (
+      state,
+      action: PayloadAction<number | Partial<IProductList["searchParams"]>>
+    ) => {
+      if (typeof action.payload === "number") {
+        state.paginationParams.productsOnPage = action.payload;
+      } else if (
+        typeof action.payload === "object" &&
+        action.payload !== null
+      ) {
+        state.searchParams = { ...state.searchParams, ...action.payload };
+      }
+
       const rangeStart =
         (state.paginationParams.page - 1) *
         state.paginationParams.productsOnPage;
 
-      state.filteredProductList = state.productList.slice(
-        rangeStart,
-        rangeStart + state.paginationParams.productsOnPage
-      );
-    },
-    filterProducts: (
-      state,
-      action: PayloadAction<IProductList["searchParams"]>
-    ) => {
-      const searchParams = state.searchParams;
-      state.searchParams = { ...searchParams, ...action.payload };
+      const { title, priceRange, isRemained } = state.searchParams;
 
       state.filteredProductList = state.productList.filter(
         (el) =>
-          el.title.match(searchParams.title) &&
-          Number(el.price) <= searchParams.priceRange.max &&
-          Number(el.price) >= searchParams.priceRange.min &&
-          (el.remained || !searchParams.isRemained)
+          el.title.match(title) &&
+          Number(el.price) <= priceRange.max &&
+          Number(el.price) >= priceRange.min &&
+          (isRemained ? Boolean(el.remained) : true)
+      );
+
+      state.filteredProductList = state.filteredProductList.slice(
+        rangeStart,
+        rangeStart + state.paginationParams.productsOnPage
       );
     },
   },
