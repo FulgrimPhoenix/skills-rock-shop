@@ -8,21 +8,34 @@ import {
 } from "@mui/material";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { AddProductButton } from "./Header.styles";
-import { useAppDispatch, useAppSelector } from "src/app/store";
-import { togglePopup } from "src/features/popups/popupSlice";
+import { useAppSelector } from "src/app/store";
+import { ProductPopup } from "../ProductPopup/ProductPopup";
+import { useModalContext } from "src/hooks/usePopup";
+import { CartPopup } from "../CartPopup/CartPopup";
+import { getCartList } from "src/features/cart/cartSelector";
 
 export const Header = () => {
-  const cart_list = useAppSelector((state) => state.cart_list);
-  const dispatch = useAppDispatch();
+  const cartList = useAppSelector(getCartList);
+  const { open } = useModalContext();
 
   const openAddProductPopup = () => {
-    dispatch(
-      togglePopup({ variant: "isProductPopupOpen", title: "Add new product" })
-    );
+    open(({ close }) => (
+      <ProductPopup
+        title="Add new product"
+        initialValues={{
+          title: "",
+          avatar: "",
+          description: "",
+          price: "",
+          remained: "",
+        }}
+        onClose={close}
+      />
+    ));
   };
 
   const openCartPopup = () => {
-    dispatch(togglePopup({ variant: "isCartPopupOpen" }));
+    open(({ close }) => <CartPopup onClose={close} />);
   };
   return (
     <AppBar position="relative">
@@ -35,7 +48,7 @@ export const Header = () => {
           Add product
         </AddProductButton>
         <IconButton onClick={openCartPopup}>
-          <Badge badgeContent={cart_list.length} color="error">
+          <Badge badgeContent={cartList.length} color="error">
             <ShoppingCartOutlinedIcon />
           </Badge>
         </IconButton>

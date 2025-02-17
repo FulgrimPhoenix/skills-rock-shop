@@ -23,8 +23,9 @@ import {
   EditProductButton,
   EditProductIcon,
 } from "./ProductCard.styles";
-import { setFocusedProduct, togglePopup } from "src/features/popups/popupSlice";
 import { FC } from "react";
+import { useModalContext } from "src/hooks/usePopup";
+import { ProductPopup } from "../ProductPopup/ProductPopup";
 
 export const ProductCard: FC<IProduct> = ({
   id,
@@ -37,7 +38,8 @@ export const ProductCard: FC<IProduct> = ({
   const currentTheme = useTheme();
   const dispatch = useAppDispatch();
   const cart_list = useAppSelector((state) => state.cart_list);
-  const quantity = cart_list.find((el) => el.id === id)?.quantity;
+  const quantity = cart_list.find((el: IProduct) => el.id === id)?.quantity;
+  const { open } = useModalContext();
 
   const deleteThisProduct = (id: string) => {
     dispatch(deleteProduct(id));
@@ -52,20 +54,13 @@ export const ProductCard: FC<IProduct> = ({
   };
 
   const openEditPopup = () => {
-    console.log("lol");
-    dispatch(
-      setFocusedProduct({
-        id,
-        title,
-        avatar,
-        description,
-        price,
-        remained,
-      })
-    );
-    dispatch(
-      togglePopup({ variant: "isProductPopupOpen", title: "Edit the product" })
-    );
+    open<IProduct>(({ close }) => (
+      <ProductPopup
+        title="Edit the product"
+        initialValues={{ id, title, avatar, description, price, remained }}
+        onClose={close}
+      />
+    ));
   };
 
   const addCurrentProductToCart = () => {

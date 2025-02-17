@@ -14,82 +14,69 @@ import {
   TextField,
   useTheme,
 } from "@mui/material";
-import { useAppSelector } from "src/app/store";
+import { useAppDispatch, useAppSelector } from "src/app/store";
 import { ProductCard } from "../ProductCard/ProductCard";
 import { FilterGrid, ProductGrid, ProductListRoot } from "./ProductList.styles";
-import { ChangeEvent, SyntheticEvent, useEffect } from "react";
+import { ChangeEvent, SyntheticEvent } from "react";
 import { PRODUCT_ON_PAGE_NUMBER } from "./ProductList.const";
-import { usePagination } from "src/hooks/usePagination";
-import { useProductFilter } from "src/hooks/useProductFilter";
+// import { useProductFilter } from "src/hooks/useProductFilter";
+
+import { getProductListState } from "src/features/products/productsSelectors";
+import { setPage, setProductOnPage } from "src/features/products/productsSlice";
+import { IProduct } from "src/types/product.type";
 
 export const ProductList = () => {
   const currentTheme = useTheme();
-  const productList = useAppSelector((state) => state.product_list);
-  const maxPrice = productList.reduce(
-    (acc, el) =>
-      typeof el.price === "number" && el.price >= acc ? el.price : acc,
-    0
-  );
-  const { filteredProductList, searchParams, setSearchParams } =
-    useProductFilter(productList);
-  const {
-    displayedProducts,
-    productsOnPage,
-    page,
-    setPage,
-    setFilteredProductList,
-    setProductsOnPage,
-  } = usePagination({
-    page: 1,
-    productsOnPage: PRODUCT_ON_PAGE_NUMBER[1],
-    filteredProductList: filteredProductList,
-  });
+  const { paginationParams, productList, filteredProductList, searchParams } =
+    useAppSelector(getProductListState);
+  const dispatch = useAppDispatch();
+  const maxPrice = 10000;
+
   // в силу того, что мы тут не используе event - я выключил проверку типа
   const handleChangePriceRange = (e: any, newPriceRange: number | number[]) => {
-    if (Array.isArray(newPriceRange) && newPriceRange.length === 2) {
-      setSearchParams({
-        ...searchParams,
-        priceRange: {
-          min: newPriceRange[0],
-          max: newPriceRange[1],
-        },
-      });
-    } else if (typeof newPriceRange === "number") {
-      setSearchParams({
-        ...searchParams,
-        priceRange: {
-          min: newPriceRange,
-          max: newPriceRange,
-        },
-      });
-    }
+    // if (Array.isArray(newPriceRange) && newPriceRange.length === 2) {
+    //   setSearchParams({
+    //     ...searchParams,
+    //     priceRange: {
+    //       min: newPriceRange[0],
+    //       max: newPriceRange[1],
+    //     },
+    //   });
+    // } else if (typeof newPriceRange === "number") {
+    //   setSearchParams({
+    //     ...searchParams,
+    //     priceRange: {
+    //       min: newPriceRange,
+    //       max: newPriceRange,
+    //     },
+    //   });
+    // }
   };
 
   const handleChangeIsAvailable = (e: SyntheticEvent, checked: boolean) => {
-    const target = e.target as HTMLInputElement;
-
-    setSearchParams({ ...searchParams, [target.name]: checked });
+    // const target = e.target as HTMLInputElement;
+    // setSearchParams({ ...searchParams, [target.name]: checked });
   };
 
   const handleChangeSearchParams = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchParams({ ...searchParams, [e.target.name]: e.target.value });
+    // setSearchParams({ ...searchParams, [e.target.name]: e.target.value });
   };
 
   const handleChangeProductDisplayedOnPage = (e: SelectChangeEvent) => {
-    setProductsOnPage(Number(e.target.value));
+    dispatch(setProductOnPage(Number(e.target.value)));
   };
 
   const resetAllFilters = () => {
-    setSearchParams({
-      title: "",
-      priceRange: { min: 0, max: maxPrice },
-      isRemained: true,
-    });
+    // setSearchParams({
+    //   title: "",
+    //   priceRange: { min: 0, max: maxPrice },
+    //   isRemained: true,
+    // });
   };
 
-  useEffect(() => {
-    setFilteredProductList(filteredProductList);
-  }, [productList, filteredProductList, setFilteredProductList]);
+  const setCurrentPage = (e: ChangeEvent<unknown>, pageNumber: number) => {
+    dispatch(setPage(pageNumber));
+  };
 
   return (
     <ProductListRoot>
@@ -119,7 +106,7 @@ export const ProductList = () => {
             <Select
               labelId="demo-simple-select-disabled-label"
               id="demo-select-small"
-              value={`${productsOnPage}`}
+              value={`${paginationParams.productsOnPage}`}
               label="Display"
               onChange={handleChangeProductDisplayedOnPage}
             >
@@ -203,7 +190,7 @@ export const ProductList = () => {
       </FilterGrid>
 
       <ProductGrid container spacing={3}>
-        {displayedProducts.map((el) => (
+        {filteredProductList.map((el: IProduct) => (
           <Grid2
             key={el.id}
             size={{ xs: 12, sm: 4, md: 2.4 }}
@@ -221,10 +208,10 @@ export const ProductList = () => {
         ))}
       </ProductGrid>
       <Pagination
-        count={Math.ceil(productList.length / productsOnPage)}
-        page={page}
+        count={Math.ceil(productList.length / paginationParams.productsOnPage)}
+        page={paginationParams.page}
         color="primary"
-        onChange={(e, value) => setPage(value)}
+        onChange={setCurrentPage}
         sx={{ m: "0 auto" }}
       />
     </ProductListRoot>

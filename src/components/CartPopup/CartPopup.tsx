@@ -7,7 +7,6 @@ import {
   useTheme,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "src/app/store";
-import { togglePopup } from "src/features/popups/popupSlice";
 import {
   CartList,
   RootCartPopup,
@@ -19,22 +18,22 @@ import {
 } from "src/features/cart/cartSlice";
 import { IProduct } from "src/types/product.type";
 import { CartListItem } from "src/ui/CartListItem/CartListItem";
-import { useMemo } from "react";
+import { FC } from "react";
 import { QuantitySelector } from "src/ui/QuantitySelector/QuantitySelector";
+import { getTotalPriceOfCart } from "src/features/cart/cartSelector";
 
-export const CartPopup = () => {
-  const popup_manager = useAppSelector((state) => state.popup_manager);
+interface ICartPopup {
+  onClose: (result?: IProduct) => void;
+}
+
+export const CartPopup: FC<ICartPopup> = ({ onClose }) => {
   const cart_list = useAppSelector((state) => state.cart_list);
   const dispatch = useAppDispatch();
   const currentTheme = useTheme();
-
-  const totalPrice = useMemo(
-    () => cart_list.reduce((acc, el) => (acc += el.price * el.quantity), 0),
-    [cart_list]
-  );
+  const totalPrice = useAppSelector(getTotalPriceOfCart);
 
   const handleClose = () => {
-    dispatch(togglePopup("isCartPopupOpen"));
+    onClose();
   };
 
   const addProductSample = (product: IProduct & { quantity: number }) => {
@@ -46,7 +45,7 @@ export const CartPopup = () => {
   };
 
   return (
-    <RootCartPopup open={popup_manager.isCartPopupOpen} onClose={handleClose}>
+    <RootCartPopup open onClose={handleClose}>
       <DialogTitle variant="h4">Cart</DialogTitle>
       <DialogContent sx={{ p: 0 }}>
         {cart_list.length === 0 ? (
@@ -60,7 +59,7 @@ export const CartPopup = () => {
         ) : (
           <>
             <CartList>
-              {cart_list.map((product) => (
+              {cart_list.map((product: IProduct & { quantity: number }) => (
                 <CartListItem
                   key={product.id}
                   product={product}

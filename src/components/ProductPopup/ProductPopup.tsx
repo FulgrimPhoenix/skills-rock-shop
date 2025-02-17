@@ -9,19 +9,19 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "src/app/store";
+import { useAppDispatch } from "src/app/store";
 import * as Yup from "yup";
-import { togglePopup } from "src/features/popups/popupSlice";
+
 import { INPUTS_LIST } from "./ProductPopup.const";
 import { addProduct, editProduct } from "src/features/products/productsSlice";
 import { useFormik } from "formik";
 import { IProduct } from "src/types/product.type";
-import { useEffect } from "react";
-import {
-  getCurrentPopupTitle,
-  getFocusedProduct,
-  getPopupState,
-} from "src/features/popups/selector";
+
+interface IProductPopup {
+  title: string;
+  initialValues: IProduct;
+  onClose: (result?: IProduct) => void;
+}
 
 const validationSchema = Yup.object({
   title: Yup.string().required("Enter title"),
@@ -31,32 +31,27 @@ const validationSchema = Yup.object({
   avatar: Yup.string().url("Paste url of product image"),
 });
 
-export const ProductPopup = () => {
-  const currentPopup = useAppSelector(getCurrentPopupTitle);
-  const { isProductPopupOpen } = useAppSelector(getPopupState);
-  const focusedProduct = useAppSelector(getFocusedProduct);
+export const ProductPopup = ({
+  title,
+  initialValues,
+  onClose,
+}: IProductPopup) => {
   const dispatch = useAppDispatch();
   const currentTheme = useTheme();
 
   const formik = useFormik<IProduct>({
-    initialValues: {
-      title: "",
-      avatar: "",
-      description: "",
-      price: "",
-      remained: "",
-    },
+    initialValues,
     validationSchema,
     onSubmit: (values) => {
-      switch (currentPopup) {
+      switch (title) {
         case "Add new product":
-          dispatch(togglePopup({ variant: "isProductPopupOpen" }));
           dispatch(addProduct(values));
           formik.resetForm();
+          onClose();
           break;
         case "Edit the product":
-          dispatch(togglePopup({ variant: "isProductPopupOpen" }));
           dispatch(editProduct(values));
+          onClose();
           formik.resetForm();
           break;
         default:
@@ -66,7 +61,7 @@ export const ProductPopup = () => {
   });
 
   const handleClose = () => {
-    dispatch(togglePopup({ variant: "isProductPopupOpen" }));
+    onClose();
     formik.resetForm();
   };
 
@@ -74,15 +69,9 @@ export const ProductPopup = () => {
     formik.handleSubmit();
   };
 
-  useEffect(() => {
-    if (currentPopup === "Edit the product") {
-      formik.setValues(focusedProduct);
-    }
-  }, [focusedProduct, currentPopup, formik]);
-
   return (
-    <Dialog open={isProductPopupOpen} onClose={handleClose}>
-      <DialogTitle variant="h4">{currentPopup}</DialogTitle>
+    <Dialog open onClose={handleClose}>
+      <DialogTitle variant="h4">{title}</DialogTitle>
       <DialogContent>
         <form style={{ marginBottom: "20px" }} onSubmit={addOrEditProduct}>
           {INPUTS_LIST.map((el) => (
@@ -129,7 +118,7 @@ export const ProductPopup = () => {
           variant="contained"
           onClick={addOrEditProduct}
         >
-          {currentPopup === "Add new product" ? "Add product" : "Save"}
+          {title === "Add new product" ? "Add product" : "Save"}
         </Button>
       </DialogActions>
     </Dialog>

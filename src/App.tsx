@@ -6,7 +6,7 @@ import { store } from "./app/store";
 import theme from "./styles/theme";
 import { CssBaseline } from "@mui/material";
 
-function App() {
+const App = () => {
   return (
     <BrowserRouter>
       <Provider store={store}>
@@ -17,6 +17,6 @@ function App() {
       </Provider>
     </BrowserRouter>
   );
-}
+};
 
 export default App;
