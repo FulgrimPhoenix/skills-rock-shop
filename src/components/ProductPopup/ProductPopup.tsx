@@ -16,6 +16,8 @@ import { INPUTS_LIST } from "./ProductPopup.const";
 import { addProduct, editProduct } from "src/features/products/productsSlice";
 import { useFormik } from "formik";
 import { IProduct } from "src/types/product.type";
+import { MemoizedInput } from "src/ui/MemoizedInput/MemoizedInput";
+import { useCallback } from "react";
 
 interface IProductPopup {
   title: string;
@@ -60,14 +62,14 @@ export const ProductPopup = ({
     },
   });
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     onClose();
     formik.resetForm();
-  };
+  }, [onClose]);
 
-  const addOrEditProduct = () => {
+  const addOrEditProduct = useCallback(() => {
     formik.handleSubmit();
-  };
+  }, [formik.handleSubmit]);
 
   return (
     <Dialog open onClose={handleClose}>
@@ -75,33 +77,19 @@ export const ProductPopup = ({
       <DialogContent>
         <form style={{ marginBottom: "20px" }} onSubmit={addOrEditProduct}>
           {INPUTS_LIST.map((el) => (
-            <Box key={el.name} minWidth={500}>
-              <TextField
-                label={el.label}
-                name={el.name}
-                type={el.type}
-                required={el.required}
-                helperText={
-                  formik.touched[el.name] && Boolean(formik.errors[el.name])
-                    ? ""
-                    : el.helperText
-                }
-                error={
-                  formik.touched[el.name] && Boolean(formik.errors[el.name])
-                }
-                fullWidth
-                margin="normal"
-                variant="standard"
-                value={formik.values[el.name]}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched[el.name] && Boolean(formik.errors[el.name]) ? (
-                <Typography component="span" variant="body2" color="error">
-                  {formik.errors[el.name]}
-                </Typography>
-              ) : null}
-            </Box>
+            <MemoizedInput
+              key={el.name}
+              label={el.label}
+              name={el.name}
+              type={el.type}
+              required={el.required}
+              helperText={el.helperText}
+              error={formik.errors[el.name]}
+              value={formik.values[el.name]}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              touched={formik.touched[el.name]}
+            />
           ))}
         </form>
       </DialogContent>

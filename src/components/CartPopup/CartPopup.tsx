@@ -18,7 +18,7 @@ import {
 } from "src/features/cart/cartSlice";
 import { IProduct } from "src/types/product.type";
 import { CartListItem } from "src/ui/CartListItem/CartListItem";
-import { FC } from "react";
+import { FC, useCallback } from "react";
 import { QuantitySelector } from "src/ui/QuantitySelector/QuantitySelector";
 import { getTotalPriceOfCart } from "src/features/cart/cartSelector";
 
@@ -30,19 +30,25 @@ export const CartPopup: FC<ICartPopup> = ({ onClose }) => {
   const cart_list = useAppSelector((state) => state.cart_list);
   const dispatch = useAppDispatch();
   const currentTheme = useTheme();
-  const totalPrice = useAppSelector(getTotalPriceOfCart);
+  const totalPrice: number = useAppSelector(getTotalPriceOfCart);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     onClose();
-  };
+  }, [onClose]);
 
-  const addProductSample = (product: IProduct & { quantity: number }) => {
-    dispatch(addProductToCart(product));
-  };
+  const addProductSample = useCallback(
+    (product: IProduct & { quantity: number }) => {
+      dispatch(addProductToCart(product));
+    },
+    [dispatch]
+  );
 
-  const deleteProductSample = (id: string) => {
-    dispatch(deleteProductFromCart(id));
-  };
+  const deleteProductSample = useCallback(
+    (id: string) => {
+      dispatch(deleteProductFromCart(id));
+    },
+    [dispatch]
+  );
 
   return (
     <RootCartPopup open onClose={handleClose}>

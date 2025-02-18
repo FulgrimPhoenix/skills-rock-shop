@@ -6,12 +6,9 @@ export const getCartList = (state: TAppState) => {
 };
 
 export const getTotalPriceOfCart = (state: TAppState) => {
-  return (
-    state.cart_list.reduce(
-      (acc: number, el: IProduct & { quantity: number }) =>
-        (acc += Number(el.price) * el.quantity),
-      0
-    ),
-    [state.cart_list]
+  return state.cart_list.reduce(
+    (acc: number, el: IProduct & { quantity: number }): number =>
+      acc + Number(el.price) * el.quantity,
+    0
   );
 };
