@@ -20,14 +20,17 @@ import { IProduct } from "src/types/product.type";
 import { CartListItem } from "src/ui/CartListItem/CartListItem";
 import { FC, useCallback } from "react";
 import { QuantitySelector } from "src/ui/QuantitySelector/QuantitySelector";
-import { getTotalPriceOfCart } from "src/features/cart/cartSelector";
+import {
+  getCartList,
+  getTotalPriceOfCart,
+} from "src/features/cart/cartSelector";
 
 interface ICartPopup {
   onClose: (result?: IProduct) => void;
 }
 
 export const CartPopup: FC<ICartPopup> = ({ onClose }) => {
-  const cart_list = useAppSelector((state) => state.cart_list);
+  const cart_list = useAppSelector(getCartList);
   const dispatch = useAppDispatch();
   const currentTheme = useTheme();
   const totalPrice: number = useAppSelector(getTotalPriceOfCart);
