@@ -17,11 +17,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "./",
-    "paths": {
-      "~features/*": ["./src/features/*"],
-      "~utils/*": ["./src/utils/*"]
-    }
+    "baseUrl": "./"
   },
   "include": ["src/**/*", "src/types/*.d.ts"]
 }

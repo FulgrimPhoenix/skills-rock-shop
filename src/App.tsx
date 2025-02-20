@@ -1,21 +1,22 @@
-function App() {
+import { BrowserRouter } from "react-router-dom";
+import { AppRoutes } from "./routes/AppRoutes";
+import { Provider } from "react-redux";
+import { ThemeProvider } from "@emotion/react";
+import { store } from "./app/store";
+import theme from "./styles/theme";
+import { CssBaseline } from "@mui/material";
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <AppRoutes />
+        </ThemeProvider>
+      </Provider>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
