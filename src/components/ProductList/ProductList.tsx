@@ -198,20 +198,13 @@ export const ProductList = () => {
       </FilterGrid>
 
       <ProductGrid container spacing={3}>
-        {filteredProductList.map((el: IProduct) => (
+        {filteredProductList.map((card: IProduct) => (
           <Grid2
-            key={el.id}
+            key={card.id}
             size={{ xs: 12, sm: 4, md: 2.4 }}
             sx={{ display: "flex" }}
           >
-            <ProductCard
-              id={el.id}
-              title={el.title}
-              avatar={el.avatar}
-              description={el.description}
-              price={el.price}
-              remained={el.remained}
-            />
+            <ProductCard card={card} />
           </Grid2>
         ))}
       </ProductGrid>

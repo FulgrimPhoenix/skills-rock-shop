@@ -17,7 +17,6 @@ import { addProduct, editProduct } from "src/features/products/productsSlice";
 import { useFormik } from "formik";
 import { IProduct } from "src/types/product.type";
 import { MemoizedInput } from "src/ui/MemoizedInput/MemoizedInput";
-import { useCallback } from "react";
 
 interface IProductPopup {
   title: string;
@@ -29,7 +28,7 @@ const validationSchema = Yup.object({
   title: Yup.string().required("Enter title"),
   description: Yup.string().min(6).max(32),
   price: Yup.number().min(0).required("Enter price"),
-  remained: Yup.number().min(0).max(1000).required("Enter product quantity"),
+  remained: Yup.number().min(0).max(10000).required("Enter product quantity"),
   avatar: Yup.string().url("Paste url of product image"),
 });
 
@@ -45,40 +44,30 @@ export const ProductPopup = ({
     initialValues,
     validationSchema,
     onSubmit: (values) => {
-      switch (title) {
-        case "Add new product":
-          dispatch(addProduct(values));
-          formik.resetForm();
-          onClose();
-          break;
-        case "Edit the product":
-          dispatch(editProduct(values));
-          onClose();
-          formik.resetForm();
-          break;
-        default:
-          break;
-      }
+      const action = values.id ? editProduct(values) : addProduct(values);
+      dispatch(action);
+      formik.resetForm();
+      onClose();
     },
   });
 
-  const handleClose = useCallback(() => {
+  const handleClose = () => {
     onClose();
     formik.resetForm();
-  }, [onClose]);
+  };
 
-  const addOrEditProduct = useCallback(() => {
+  const addOrEditProduct = () => {
     formik.handleSubmit();
-  }, [formik.handleSubmit]);
+  };
 
   return (
     <Dialog open onClose={handleClose}>
       <DialogTitle variant="h4">{title}</DialogTitle>
       <DialogContent>
         <form style={{ marginBottom: "20px" }} onSubmit={addOrEditProduct}>
-          {INPUTS_LIST.map((el) => (
+          {INPUTS_LIST.map((el, i) => (
             <MemoizedInput
-              key={el.name}
+              key={`${el.name}-${i}`}
               label={el.label}
               name={el.name}
               type={el.type}

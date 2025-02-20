@@ -27,22 +27,17 @@ import { FC } from "react";
 import { useModalContext } from "src/hooks/usePopup";
 import { ProductPopup } from "../ProductPopup/ProductPopup";
 
-export const ProductCard: FC<IProduct> = ({
-  id,
-  title,
-  avatar,
-  description,
-  price,
-  remained,
-}) => {
+export const ProductCard: FC<{ card: IProduct }> = ({ card }) => {
   const currentTheme = useTheme();
   const dispatch = useAppDispatch();
   const cart_list = useAppSelector((state) => state.cart_list);
-  const quantity = cart_list.find((el: IProduct) => el.id === id)?.quantity;
+  const quantity = cart_list.find(
+    (el: IProduct) => el.id === card.id
+  )?.quantity;
   const { open } = useModalContext();
 
   const deleteThisProduct = () => {
-    dispatch(deleteProduct(id || ""));
+    dispatch(deleteProduct(card.id || ""));
   };
 
   const addProductSample = (product: IProduct & { quantity: number }) => {
@@ -57,47 +52,38 @@ export const ProductCard: FC<IProduct> = ({
     open<IProduct>(({ close }) => (
       <ProductPopup
         title="Edit the product"
-        initialValues={{ id, title, avatar, description, price, remained }}
+        initialValues={card}
         onClose={close}
       />
     ));
   };
 
   const addCurrentProductToCart = () => {
-    dispatch(
-      addProductToCart({
-        id,
-        title,
-        avatar,
-        description,
-        price,
-        remained,
-      })
-    );
+    dispatch(addProductToCart(card));
   };
 
   return (
-    <CardRoot key={id}>
-      <CardMedia sx={{ height: 140 }} image={avatar} title={title} />
+    <CardRoot key={card.id}>
+      <CardMedia sx={{ height: 140 }} image={card.avatar} title={card.title} />
       <EditProductButton onClick={openEditPopup}>
         <EditProductIcon />
       </EditProductButton>
       <CardContentContainer>
         <Box>
           <Typography variant="h5" component="h6" overflow="clip" noWrap>
-            {title}
+            {card.title}
           </Typography>
-          <Typography variant="body2">{description}</Typography>
+          <Typography variant="body2">{card.description}</Typography>
         </Box>
         <Box>
           <Typography variant="h6" sx={{ textAlign: "right", mt: "auto" }}>
-            {price} ₽
+            {card.price} ₽
           </Typography>
           <Typography
             variant="body2"
             color="textSecondary"
             sx={{ textAlign: "right" }}
-          >{`Remained: ${remained}`}</Typography>
+          >{`Remained: ${card.remained}`}</Typography>
         </Box>
       </CardContentContainer>
       <CardActions sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -107,12 +93,7 @@ export const ProductCard: FC<IProduct> = ({
         {quantity ? (
           <QuantitySelector
             product={{
-              id,
-              title,
-              avatar,
-              description,
-              price,
-              remained,
+              ...card,
               quantity,
             }}
             addProductSample={addProductSample}
@@ -123,7 +104,7 @@ export const ProductCard: FC<IProduct> = ({
             size="small"
             variant="contained"
             sx={{ color: currentTheme.palette.text.primary }}
-            disabled={remained ? false : true}
+            disabled={card.remained ? false : true}
             onClick={addCurrentProductToCart}
           >
             Add to cart

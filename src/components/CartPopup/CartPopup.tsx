@@ -14,6 +14,7 @@ import {
 } from "./CartPopup.styles";
 import {
   addProductToCart,
+  deleteAllProductsFromCart,
   deleteProductFromCart,
 } from "src/features/cart/cartSlice";
 import { IProduct } from "src/types/product.type";
@@ -30,34 +31,32 @@ interface ICartPopup {
 }
 
 export const CartPopup: FC<ICartPopup> = ({ onClose }) => {
-  const cart_list = useAppSelector(getCartList);
+  const cards = useAppSelector(getCartList);
   const dispatch = useAppDispatch();
   const currentTheme = useTheme();
-  const totalPrice: number = useAppSelector(getTotalPriceOfCart);
+  const totalPrice = useAppSelector(getTotalPriceOfCart);
 
-  const handleClose = useCallback(() => {
+  const handleClose = () => {
     onClose();
-  }, [onClose]);
+  };
 
-  const addProductSample = useCallback(
-    (product: IProduct & { quantity: number }) => {
-      dispatch(addProductToCart(product));
-    },
-    [dispatch]
-  );
+  const addProductSample = (product: IProduct & { quantity: number }) => {
+    dispatch(addProductToCart(product));
+  };
 
-  const deleteProductSample = useCallback(
-    (id: string) => {
-      dispatch(deleteProductFromCart(id));
-    },
-    [dispatch]
-  );
+  const handleClearCart = () => {
+    dispatch(deleteAllProductsFromCart());
+  };
+
+  const deleteProductSample = (id: string) => {
+    dispatch(deleteProductFromCart(id));
+  };
 
   return (
     <RootCartPopup open onClose={handleClose}>
       <DialogTitle variant="h4">Cart</DialogTitle>
       <DialogContent sx={{ p: 0 }}>
-        {cart_list.length === 0 ? (
+        {cards.length === 0 ? (
           <Typography
             component="h6"
             variant="h5"
@@ -68,7 +67,7 @@ export const CartPopup: FC<ICartPopup> = ({ onClose }) => {
         ) : (
           <>
             <CartList>
-              {cart_list.map((product: IProduct & { quantity: number }) => (
+              {cards.map((product: IProduct & { quantity: number }) => (
                 <CartListItem
                   key={product.id}
                   product={product}
@@ -93,7 +92,12 @@ export const CartPopup: FC<ICartPopup> = ({ onClose }) => {
           </>
         )}
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ justifyContent: "space-between" }}>
+        {cards.length !== 0 && (
+          <Button type="reset" variant="outlined" onClick={handleClearCart}>
+            Clear cart
+          </Button>
+        )}
         <Button
           type="submit"
           variant="contained"

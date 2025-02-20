@@ -33,7 +33,15 @@ export const cartSlice = createSlice({
         state[targetProductIndex].quantity -= 1;
       }
     },
+
+    deleteAllProductsFromCart: (state, action: PayloadAction<void>) => {
+      return [];
+    },
   },
 });
 
-export const { addProductToCart, deleteProductFromCart } = cartSlice.actions;
+export const {
+  addProductToCart,
+  deleteProductFromCart,
+  deleteAllProductsFromCart,
+} = cartSlice.actions;

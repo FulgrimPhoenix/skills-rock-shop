@@ -44,7 +44,24 @@ export const productsSlice = createSlice({
     addProduct: (state, action: PayloadAction<IProduct>) => {
       const newProduct = { ...action.payload, id: `${Date.now()}` };
       state.productList.push(newProduct);
-      state.filteredProductList.push(newProduct);
+      const rangeStart =
+        (state.paginationParams.page - 1) *
+        state.paginationParams.productsOnPage;
+
+      const { title, priceRange, isRemained } = state.searchParams;
+
+      state.filteredProductList = state.productList.filter(
+        (el) =>
+          el.title.match(title) &&
+          Number(el.price) <= priceRange.max &&
+          Number(el.price) >= priceRange.min &&
+          (isRemained ? Boolean(el.remained) : true)
+      );
+
+      state.filteredProductList = state.filteredProductList.slice(
+        rangeStart,
+        rangeStart + state.paginationParams.productsOnPage
+      );
     },
     editProduct: (state, action: PayloadAction<IProduct>) => {
       let targetProductIndex = state.productList.findIndex(
@@ -52,9 +69,25 @@ export const productsSlice = createSlice({
       );
       if (targetProductIndex !== -1) {
         state.productList[targetProductIndex] = action.payload;
-        state.filteredProductList[targetProductIndex] =
-          state.productList[targetProductIndex];
       }
+      const rangeStart =
+        (state.paginationParams.page - 1) *
+        state.paginationParams.productsOnPage;
+
+      const { title, priceRange, isRemained } = state.searchParams;
+
+      state.filteredProductList = state.productList.filter(
+        (el) =>
+          el.title.match(title) &&
+          Number(el.price) <= priceRange.max &&
+          Number(el.price) >= priceRange.min &&
+          (isRemained ? Boolean(el.remained) : true)
+      );
+
+      state.filteredProductList = state.filteredProductList.slice(
+        rangeStart,
+        rangeStart + state.paginationParams.productsOnPage
+      );
     },
     deleteProduct: (state, action: PayloadAction<string>) => {
       state.productList = state.productList.filter(
